@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_google_api_client.block.admin_ga_site_traffic.class">Rz\GoogleAPIClientBundle\Block\AdminGASiteTrafficBlockService</parameter>
+    </parameters>
+
+    <services>
+        <service id="rz_google_api_client.block.admin_ga_site_traffic" class="%rz_google_api_client.block.admin_ga_site_traffic.class%" scope="prototype">
+            <tag name="sonata.block"/>
+            <argument>rz_google_api_client.block.admin_ga_site_traffic</argument>
+            <argument type="service" id="templating" />
+            <argument type="service" id="rz_google_api_client.api.google_service_analytics" />
+        </service>
+    </services>
+</container>

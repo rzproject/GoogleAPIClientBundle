@@ -1,0 +1,421 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+	{% if context.getSetting('mode') == 'admin' %}
+	<div class="box box-color box-bordered green">
+		<div class="box-title">
+			<h3>
+				<i class="icon-table"></i>
+				{% if settings.title %}<h3 class="sonata-news-block-recent-post">{{ settings.title }}</h3>{% endif %}
+			</h3>
+		</div>
+		<div class="box-content Dashboard Dashboard--full">
+				<div id="embed-api-auth-container"></div>
+				<div class="ViewSelector" id="view-selector-container"></div>
+				<div class="row-fluid">
+					<div class="span12" id="chart-container-pageviews"></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span4" id="chart-container-browser"></div>
+					<div class="span4" id="chart-container-user-type"></div>
+					<div class="span4" id="chart-container-device-category"></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span4" id="chart-container-city"></div>
+					<div class="span4" id="chart-container-bounce-rate"></div>
+					<div class="span4" id="chart-container-traffic-source"></div>
+				</div>
+				<div id="date-range-selector-container"></div>
+		</div>
+	</div>
+	{% endif %}
+
+	<style>
+		:root {
+			--FlexGrid-gutter: var(--gap);
+			--FlexGrid-gutter-lg: var(--gap-lg);
+			--FlexGrid-itemMinWidth: 300px;
+			--FlexGrid-itemMinWidth-lg: 360px;
+		}
+
+		.FlexGrid {
+			display: flex;
+			flex-wrap: wrap;
+			list-style: none;
+			margin: 0 0 -var(--FlexGrid-gutter) -var(--FlexGrid-gutter);
+			padding: 0;
+		}
+
+		.FlexGrid-item {
+			flex: 1 0 calc(100% - var(--FlexGrid-gutter));
+			margin: 0 0 var(--FlexGrid-gutter) var(--FlexGrid-gutter);
+		}
+
+		.FlexGrid-item--fixed {
+			/* An `auto` flex-basis will use the size of the contents. */
+			flex: 0 0 auto!important;
+		}
+
+
+		/**
+		 * --halves modifier.
+		 * Ensures that an item never takes up more than half of the width, i.e.
+		 * no more that two items will ever be in a row.
+		 */
+		.FlexGrid--halves .FlexGrid-item {
+			flex-basis: 34%;
+		}
+
+
+		@media (--break-md) {
+			.FlexGrid-item {
+				flex-basis: var(--FlexGrid-itemMinWidth);
+			}
+		}
+
+		@media (--break-lg) {
+			.FlexGrid {
+				margin: 0 0 -var(--FlexGrid-gutter-lg) -var(--FlexGrid-gutter-lg);
+			}
+			.FlexGrid-item {
+				flex-basis: var(--FlexGrid-itemMinWidth-lg);
+				margin: 0 0 var(--FlexGrid-gutter-lg) var(--FlexGrid-gutter-lg);
+			}
+		}
+
+		.ViewSelector{
+			display: block
+		}
+
+		.ViewSelector table {
+			display: block;
+			margin-bottom: 1em;
+			width: 100%;
+		}
+
+		.ViewSelector td:first-child {
+			font-weight: 700;
+			margin: 0 .25em .25em 0;
+			display: block;
+		}
+
+		/*
+		 * Additional hacks to get the native ViewSelector component (which uses
+		 * closure widgets) to look like our custom ViewSelector extension.
+		 */
+
+		.ViewSelector table,
+		.ViewSelector tbody,
+		.ViewSelector tr,
+		.ViewSelector td {
+			display: block;
+		}
+
+		.ViewSelector table {
+			height: auto!important;
+			width: auto!important;
+		}
+
+		.ViewSelector td {
+			width: auto!important;
+		}
+
+		.ViewSelector td:last-child * {
+			display: block;
+			text-align: left;
+		}
+
+		.ViewSelector td:last-child > div {
+			font-weight: 400;
+			margin: 0;
+		}
+
+		@media (--break-md) {
+			.ViewSelector {
+				display: flex;
+				margin: 0 0 -1em -1em;
+				width: calc(100% + 1em);
+			}
+			.ViewSelector table {
+				flex: 1 1 calc(100%/3 - 1em);
+				margin-left: 1em;
+			}
+		}
+
+		/*
+		 * Force each item onto its own line
+		 * regardless of the breakpoint.
+		 */
+		.ViewSelector--stacked {
+			display: block;
+			margin: 0;
+			width: auto;
+		}
+
+		.ViewSelector--stacked table {
+			margin-left: 0;
+		}
+	</style>
+
+	<script>
+		gapi.analytics.ready(function() {
+
+			/**
+			 * Authorize the user immediately if the user has already granted access.
+			 * If no access has been created, render an authorize button inside the
+			 * element with the ID "embed-api-auth-container".
+			 */
+			gapi.analytics.auth.authorize({
+				{#container: 'embed-api-auth-container',#}
+				{#clientid: '{{ clientId }}'#}
+				serverAuth: {
+					access_token: '{{ access_token }}'
+				}
+			});
+
+
+			/**
+			 * Create a new ViewSelector instance to be rendered inside of an
+			 * element with the id "view-selector-container".
+			 */
+			var viewSelector = new gapi.analytics.ViewSelector({
+				container: 'view-selector-container'
+			});
+
+			// Render the view selector to the page.
+			viewSelector.execute();
+
+			/**
+			 * Query params representing the first chart's date range.
+			 */
+			var dateRange = {
+				'start-date': '30daysAgo',
+				'end-date': 'yesterday'
+			};
+
+
+			/**
+			 * Create a new DataChart instance with the given query parameters
+			 * and Google chart options. It will be rendered inside an element
+			 * with the id "chart-container-pageviews".
+			 */
+			var dataChart = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					dimensions: 'ga:date',
+					metrics: 'ga:sessions',
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-pageviews',
+					type: 'LINE',
+					options: {
+						width: '100%'
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-pageviews'}});
+
+			/**
+			 * Create the 2nd DataChart for top browsers over the past 30 days/period.
+			 * It will be rendered inside an element with the id "chart-container-browse".
+			 */
+			var dataChart2 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'dimensions': 'ga:browser',
+					'metrics': 'ga:pageviews',
+					'sort': '-ga:pageviews',
+					'max-results': 10,
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-browse',
+					type: 'PIE',
+					options: {
+						width: '100%'
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-browser'}});
+
+			/**
+			 * Create the 3rd DataChart for % users over the past 30 days/period.
+			 * It will be rendered inside an element with the id "chart-container-user-type".
+			 */
+			var dataChart3 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'dimensions': 'ga:userType',
+					'metrics': 'ga:users',
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-user-type',
+					type: 'PIE',
+					options: {
+						width: '100%'
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-user-type'}});
+
+			/**
+			 * Create the 4th DataChart for top city over the past 30 days/period.
+			 * It will be rendered inside an element with the id "chart-container-city".
+			 */
+			var dataChart4 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'dimensions': 'ga:city',
+					'metrics': 'ga:pageviews',
+					'sort': '-ga:pageviews',
+					'max-results': 10,
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-city',
+					type: 'BAR',
+					options: {
+						width: '100%',
+						bars: 'horizontal',
+						hAxis: {
+							title: 'Page Views',
+						},
+						vAxis: {
+							title: 'City',
+							textPosition: 'out'
+						},
+						chartArea: "70%"
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-city'}});
+
+
+			/**
+			 * Create the 4th DataChart for top city over the past 30 days/period.
+			 * It will be rendered inside an element with the id "chart-container-device-category".
+			 */
+			var dataChart5 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'dimensions': 'ga:deviceCategory',
+					'metrics': 'ga:pageviews',
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-device-category',
+					type: 'PIE',
+					options: {
+						width: '100%',
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-device-category'}});
+
+			/**
+			 * Create a new DataChart instance with the given query parameters
+			 * and Google chart options. It will be rendered inside an element
+			 * with the id "chart-container-pageviews".
+			 */
+			var dataChart6 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					dimensions: 'ga:date',
+					metrics: 'ga:bounceRate',
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-bounce-rate',
+					type: 'LINE',
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-bounce-rate'}});
+
+			/**
+			 * Create the 4th DataChart for top city over the past 30 days/period.
+			 * It will be rendered inside an element with the id "chart-container-city".
+			 */
+			var dataChart7 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'dimensions': 'ga:source',
+					 metrics: 'ga:users',
+					'sort': '-ga:users',
+					'max-results': 10,
+					'start-date': '30daysAgo',
+					'end-date': 'yesterday'
+				},
+				chart: {
+					container: 'chart-container-traffic-source',
+					type: 'BAR',
+					options: {
+						width: '100%',
+						bars: 'vertical',
+						hAxis: {
+							title: 'User Count',
+						},
+						vAxis: {
+							title: 'Source',
+							textPosition: 'out'
+						},
+						chartArea: "{left:-120,top:0,width:'50%',height:'75%'}"
+					}
+				}
+			})
+			.set({query: dateRange})
+			.set({chart: {container: 'chart-container-traffic-source'}});
+
+
+			/**
+			 * Render the dataChart on the page whenever a new view is selected.
+			 */
+			viewSelector.on('change', function(ids) {
+				dataChart.set({query: {ids: ids}}).execute();
+				dataChart2.set({query: {ids: ids}}).execute()
+				dataChart3.set({query: {ids: ids}}).execute();
+				dataChart4.set({query: {ids: ids}}).execute();
+				dataChart5.set({query: {ids: ids}}).execute();
+				dataChart6.set({query: {ids: ids}}).execute();
+				dataChart7.set({query: {ids: ids}}).execute();
+				//renderSiteTraffic(ids);
+			});
+
+			/**
+			 * Create a new DateRangeSelector instance to be rendered inside of an
+			 * element with the id "date-range-selector-1-container", set its date range
+			 * and then render it to the page.
+			 */
+			var dateRangeSelector = new gapi.analytics.ext.DateRangeSelector({
+				container: 'date-range-selector-container'
+			}).set(dateRange).execute();
+
+			/**
+			 * Register a handler to run whenever the user changes the date range from
+			 * the first datepicker. The handler will update the first dataChart
+			 * instance as well as change the dashboard subtitle to reflect the range.
+			 */
+			dateRangeSelector.on('change', function(data) {
+				dataChart.set({query: data}).execute();
+				dataChart2.set({query: data}).execute();
+				dataChart3.set({query: data}).execute();
+				dataChart4.set({query: data}).execute();
+				dataChart5.set({query: data}).execute();
+				dataChart6.set({query: data}).execute();
+				dataChart7.set({query: data}).execute();
+
+				//renderSiteTraffic(data);
+
+				// Update the "from" dates text.
+//				var datefield = document.getElementById('from-dates');
+//				datefield.innerHTML = data['start-date'] + '&mdash;' + data['end-date'];
+			});
+		});
+	</script>
+{% endblock %}

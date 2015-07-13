@@ -1,0 +1,35 @@
+{
+  "name": "rz/google-api-client-bundle",
+  "type": "symfony-bundle",
+  "description": "A Symfony2 Wrapper for the Google APIs Client Library for PHP",
+  "keywords": ["Google API"],
+  "homepage": "http://github.com/rzproject/RzGoogleAPIClientBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mell M. Zamora",
+      "email": "mell@rzproject.org",
+      "homepage": "http://www.rzproject.org"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2",
+    "symfony/framework-bundle": "2.*",
+    "symfony/yaml": "2.*",
+    "google/apiclient": "1.*"
+  },
+  "require-dev": {
+    "mockery/mockery": "*"
+  },
+  "suggest": {
+    "rz/block-bundle": "1.2.1.*"
+  },
+  "autoload": {
+    "psr-4": { "Rz\\GoogleAPIClientBundle\\": "" }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
+}

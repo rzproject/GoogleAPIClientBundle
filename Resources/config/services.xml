@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_google_api_client.config_manager.class">Rz\GoogleAPIClientBundle\Services\ConfigManager</parameter>
+        <parameter key="rz_google_api_client.api.google_client.class">Rz\GoogleAPIClientBundle\Services\GoogleClient</parameter>
+        <parameter key="rz_google_api_client.api.google_service_analytics.class">Rz\GoogleAPIClientBundle\Services\GoogleServiceAnalytics</parameter>
+    </parameters>
+
+    <services>
+        <service id="rz_google_api_client.config_manager" class="%rz_google_api_client.config_manager.class%"/>
+
+        <service id="rz_google_api_client.api.google_client" class="%rz_google_api_client.api.google_client.class%">
+            <argument type="service" id="rz_google_api_client.config_manager" />
+        </service>
+
+        <service id="rz_google_api_client.api.google_service_analytics" class="%rz_google_api_client.api.google_service_analytics.class%">
+            <argument type="service" id="rz_google_api_client.api.google_client" />
+        </service>
+    </services>
+</container>

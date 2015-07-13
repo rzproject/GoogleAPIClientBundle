@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_google_api_client.twig_extension.google_service_analytics.class">Rz\GoogleAPIClientBundle\Twig\Extension\GoogleServiceAnalyticsExtension</parameter>
+    </parameters>
+
+    <services>
+        <service id="rz_google_api_client.twig_extension.google_service_analytics" class="%rz_google_api_client.twig_extension.google_service_analytics.class%">
+            <tag name="twig.extension"/>
+            <argument type="service" id="rz_google_api_client.config_manager" />
+        </service>
+    </services>
+</container>
