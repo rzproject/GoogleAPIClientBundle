@@ -18,6 +18,8 @@ class GoogleServiceAnalyticsExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('rz_google_service_analytics_embed_api', array($this, 'gaEmbedAPI'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('rz_google_analytics_tracking_code', array($this, 'gAnalyticsTrackingCode'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('rz_google_analytics_page_view', array($this, 'gAnalyticsPageView'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('rz_google_analytics_page_view_custom', array($this, 'gAnalyticsPageViewCustom'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('rz_google_tag_manager_code', array($this, 'gATagManagerCode'), array('is_safe' => array('html')))
         );
     }
@@ -61,15 +63,80 @@ EOT;
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+})(window,document,'script','//www.google-analytics.com/analytics.js','rz_google_analytics_tracking_code_tracker_name');
 
-ga('create', 'rz_google_analytics_tracking_code', 'auto');
-ga('send', 'pageview');
+rz_google_analytics_tracking_code_tracker_name('create', 'rz_google_analytics_tracking_code', 'auto');
 </script>
 <!-- Google Analytics Code -->
 EOT;
 
+        if($analyticsSettings['tracker_name']) {
+            $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $analyticsSettings['tracker_name'], $gaTrackingCode);
+        }
+
         return str_replace('rz_google_analytics_tracking_code', $analyticsSettings['tracking_id'], $gaTrackingCode);
+    }
+
+    public function gAnalyticsPageView()
+    {
+        $ga = $this->configManager->getConfig('google_services');
+        $analyticsSettings = $this->configManager->getConfigInConfigs('analytics',$ga);
+
+        if (!$analyticsSettings && !$analyticsSettings['enabled']) {
+            return '<!-- Google Analytics tracking is disabled due to rz_google_api_client.settings.google_services.analytics.enabled=false in your configuration -->';
+        }
+
+            $gaTrackingCode = <<<EOT
+<!-- Google Analytics Event -->
+<script type="text/javascript">
+rz_google_analytics_tracking_code_tracker_name('send', 'pageview');
+</script>
+<!-- Google Analytics Event -->
+EOT;
+
+        if($analyticsSettings['tracker_name']) {
+            $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $analyticsSettings['tracker_name'], $gaTrackingCode);
+        }
+
+        return $gaTrackingCode;
+    }
+
+    public function gAnalyticsPageViewCustom($settings = array())
+    {
+        $ga = $this->configManager->getConfig('google_services');
+        $analyticsSettings = $this->configManager->getConfigInConfigs('analytics',$ga);
+
+        if (!$analyticsSettings && !$analyticsSettings['enabled']) {
+            return '<!-- Google Analytics tracking is disabled due to rz_google_api_client.settings.google_services.analytics.enabled=false in your configuration -->';
+        }
+        if(isset($settings)) {
+            $gaTrackingCode = <<<EOT
+<!-- Google Analytics Event -->
+<script type="text/javascript">
+rz_google_analytics_tracking_code_tracker_name('send', 'pageview', {'page': 'rz_google_analytics_tracking_code_tracker_page'});
+</script>
+<!-- Google Analytics Event -->
+EOT;
+        } else {
+            $gaTrackingCode = <<<EOT
+<!-- Google Analytics Event -->
+<script type="text/javascript">
+rz_google_analytics_tracking_code_tracker_name('send', 'pageview');
+</script>
+<!-- Google Analytics Event -->
+EOT;
+        }
+
+
+        if($analyticsSettings['tracker_name']) {
+            $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $analyticsSettings['tracker_name'], $gaTrackingCode);
+        }
+
+        if(isset($settings) && isset($settings['page'])) {
+            $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_page', $settings['page'], $gaTrackingCode);
+        }
+
+        return $gaTrackingCode;
     }
 
     public function gATagManagerCode()

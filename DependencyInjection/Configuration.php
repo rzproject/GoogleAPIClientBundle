@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('enabled')->defaultValue(true)->end()
                                         ->scalarNode('tracking_id')->isRequired()->cannotBeEmpty()->end()
+                                        ->scalarNode('tracker_name')->defaultValue('__rz_gaTracker')->end()
                                     ->end()
                                 ->end()
                                 ->arrayNode('tag_manager')
