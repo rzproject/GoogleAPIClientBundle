@@ -45,9 +45,7 @@ class AdminGASiteTrafficBlockService extends BaseBlockService
 
         $client = $this->analyticsService->authenticate();
         $accessToken = json_decode($client->getAccessToken());
-
-        $webApp = $configManager->getConfig('web_app');
-        $clientId = $configManager->getConfigInConfigs('client_id', $webApp);
+        $clientId = $configManager->getGoogleClientWebAppAPIClientId();
 
         $parameters = array(
             'context'   => $blockContext,

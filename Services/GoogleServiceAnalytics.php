@@ -30,16 +30,15 @@ class GoogleServiceAnalytics extends \Google_Service_Analytics
 
         // Create and configure a new client object.
         $client = $this->getClient();
-        $client->setApplicationName("g_service_analytics");
         $configManager  = $this->gClient->getConfigManager();
-
-        $serviceConfig = $configManager->getConfig('service');
-
-
+        $client->setApplicationName($configManager->getGoogleClientServiceAPIAppName());
+        if(!$configManager->isGoogleClientAPIEnabled()) {
+            return false;
+        }
         // Read the generated client_secrets.p12 key.
-        $key = file_get_contents($configManager->getConfigInConfigs('certificate_p12', $serviceConfig));
+        $key = file_get_contents($configManager->getGoogleClientServiceAPICertificateP12());
         $cred = new \Google_Auth_AssertionCredentials(
-            $configManager->getConfigInConfigs('client_email', $serviceConfig),
+            $configManager->getGoogleClientServiceAPIClientEmail(),
             array(\Google_Service_Analytics::ANALYTICS_READONLY),
             $key
         );
