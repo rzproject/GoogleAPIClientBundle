@@ -9,7 +9,7 @@
     </parameters>
 
     <services>
-        <service id="rz_google_api_client.block.admin_ga_site_traffic" class="%rz_google_api_client.block.admin_ga_site_traffic.class%" scope="prototype">
+        <service id="rz_google_api_client.block.admin_ga_site_traffic" class="%rz_google_api_client.block.admin_ga_site_traffic.class%">
             <tag name="sonata.block"/>
             <argument>rz_google_api_client.block.admin_ga_site_traffic</argument>
             <argument type="service" id="templating" />
