@@ -45,7 +45,7 @@ class RzGoogleAPIClientExtension extends Extension
         if (!empty($config['settings'])) {
             $definition = $container->getDefinition('rz_google_api_client.config_manager');
             foreach ($config['settings'] as $name => $configuration) {
-                    $definition->addMethodCall('setConfig', array($name, $configuration));
+                $definition->addMethodCall('setConfig', array($name, $configuration));
             }
         }
     }
@@ -74,5 +74,4 @@ class RzGoogleAPIClientExtension extends Extension
         #google_service_analytics
         $container->setParameter('rz_google_api_client.twig_extension.google_service_analytics.class', $config['google_service_analytics']['class']);
     }
-
 }

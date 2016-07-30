@@ -8,7 +8,7 @@ class GoogleServiceAnalyticsExtension extends \Twig_Extension
 {
     protected $configManager;
 
-    function __construct(ConfigManager $configManager)
+    public function __construct(ConfigManager $configManager)
     {
         $this->configManager = $configManager;
     }
@@ -26,7 +26,6 @@ class GoogleServiceAnalyticsExtension extends \Twig_Extension
 
     public function gaEmbedAPI()
     {
-
         if (!$this->configManager->isGoogleClientAPIEnabled()) {
             return '<!-- RzGoogleAPIClient is disabled due to rz_google_api_client.settings.enabled=false in your configuration -->';
         }
@@ -50,7 +49,6 @@ EOT;
 
     public function gAnalyticsTrackingCode()
     {
-
         if (!$this->configManager->getGoogleServicesAnalyticsEnabled() and !$this->configManager->getGoogleServicesAnalyticsTrackerName() && !$this->configManager->getGoogleServicesAnalyticsTrackingId()) {
             return '<!-- Google Analytics tracking is disabled due to rz_google_api_client.settings.google_services.analytics.enabled=false in your configuration -->';
         }
@@ -68,8 +66,8 @@ rz_google_analytics_tracking_code_tracker_name('create', 'rz_google_analytics_tr
 <!-- Google Analytics Code -->
 EOT;
 
-            $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $this->configManager->getGoogleServicesAnalyticsTrackerName(), $gaTrackingCode);
-            return str_replace('rz_google_analytics_tracking_code', $this->configManager->getGoogleServicesAnalyticsTrackingId(), $gaTrackingCode);
+        $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $this->configManager->getGoogleServicesAnalyticsTrackerName(), $gaTrackingCode);
+        return str_replace('rz_google_analytics_tracking_code', $this->configManager->getGoogleServicesAnalyticsTrackingId(), $gaTrackingCode);
     }
 
     public function gAnalyticsPageView()
@@ -78,7 +76,7 @@ EOT;
             return '<!-- Google Analytics tracking is disabled due to rz_google_api_client.settings.google_services.analytics.enabled=false in your configuration -->';
         }
 
-            $gaTrackingCode = <<<EOT
+        $gaTrackingCode = <<<EOT
 <!-- Google Analytics Event -->
 <script type="text/javascript">
 rz_google_analytics_tracking_code_tracker_name('send', 'pageview');
@@ -86,7 +84,7 @@ rz_google_analytics_tracking_code_tracker_name('send', 'pageview');
 <!-- Google Analytics Event -->
 EOT;
 
-        return str_replace('rz_google_analytics_tracking_code_tracker_name',$this->configManager->getGoogleServicesAnalyticsTrackerName(), $gaTrackingCode);
+        return str_replace('rz_google_analytics_tracking_code_tracker_name', $this->configManager->getGoogleServicesAnalyticsTrackerName(), $gaTrackingCode);
     }
 
     public function gAnalyticsPageViewCustom($settings = array())
@@ -95,7 +93,7 @@ EOT;
             return '<!-- Google Analytics tracking is disabled due to rz_google_api_client.settings.google_services.analytics.enabled=false in your configuration -->';
         }
 
-        if(isset($settings)) {
+        if (isset($settings)) {
             $gaTrackingCode = <<<EOT
 <!-- Google Analytics Event -->
 <script type="text/javascript">
@@ -115,7 +113,7 @@ EOT;
 
         $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_name', $this->configManager->getGoogleServicesAnalyticsTrackerName(), $gaTrackingCode);
 
-        if(isset($settings) && isset($settings['page'])) {
+        if (isset($settings) && isset($settings['page'])) {
             $gaTrackingCode = str_replace('rz_google_analytics_tracking_code_tracker_page', $settings['page'], $gaTrackingCode);
         }
 

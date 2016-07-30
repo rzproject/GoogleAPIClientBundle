@@ -26,13 +26,14 @@ class GoogleServiceAnalytics extends \Google_Service_Analytics
         $this->gClient = $gClient;
     }
 
-    public function authenticate() {
+    public function authenticate()
+    {
 
         // Create and configure a new client object.
         $client = $this->getClient();
         $configManager  = $this->gClient->getConfigManager();
         $client->setApplicationName($configManager->getGoogleClientServiceAPIAppName());
-        if(!$configManager->isGoogleClientAPIEnabled()) {
+        if (!$configManager->isGoogleClientAPIEnabled()) {
             return false;
         }
         // Read the generated client_secrets.p12 key.
@@ -43,7 +44,7 @@ class GoogleServiceAnalytics extends \Google_Service_Analytics
             $key
         );
         $client->setAssertionCredentials($cred);
-        if($client->getAuth()->isAccessTokenExpired()) {
+        if ($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
         }
 

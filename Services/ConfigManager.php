@@ -85,15 +85,15 @@ class ConfigManager
      */
     public function getConfigInConfigs($name, $config)
     {
-        if($this->hasConfigInConfigs($name, $config)) {
+        if ($this->hasConfigInConfigs($name, $config)) {
             return $config[$name];
         } else {
             return;
         }
-
     }
 
-    public function getGoogleServices() {
+    public function getGoogleServices()
+    {
         if (!$this->hasConfig('google_services')) {
             throw ConfigManagerException::configDoesNotExist('google_services');
         }
@@ -101,7 +101,8 @@ class ConfigManager
         return $this->getConfig('google_services');
     }
 
-    public function getGoogleClientAPI() {
+    public function getGoogleClientAPI()
+    {
         if (!$this->hasConfig('client_api')) {
             throw ConfigManagerException::configDoesNotExist('client_api');
         }
@@ -109,9 +110,10 @@ class ConfigManager
         return $this->getConfig('client_api');
     }
 
-    public function isGoogleClientAPIEnabled() {
+    public function isGoogleClientAPIEnabled()
+    {
         $clientAPI = $this->getGoogleClientAPI();
-        if($this->hasConfigInConfigs('enabled', $clientAPI)) {
+        if ($this->hasConfigInConfigs('enabled', $clientAPI)) {
             return $this->getConfigInConfigs('enabled', $clientAPI);
         } else {
             return;
@@ -122,36 +124,40 @@ class ConfigManager
     #  google_services.analytics
     ###
 
-    public function getGoogleServicesAnalytics() {
+    public function getGoogleServicesAnalytics()
+    {
         $clientAPI = $this->getGoogleServices();
-        if($this->hasConfigInConfigs('analytics', $clientAPI)) {
+        if ($this->hasConfigInConfigs('analytics', $clientAPI)) {
             return $this->getConfigInConfigs('analytics', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleServicesAnalyticsEnabled() {
+    public function getGoogleServicesAnalyticsEnabled()
+    {
         $clientAPI = $this->getGoogleServicesAnalytics();
-        if($this->hasConfigInConfigs('enabled', $clientAPI)) {
+        if ($this->hasConfigInConfigs('enabled', $clientAPI)) {
             return $this->getConfigInConfigs('enabled', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleServicesAnalyticsTrackingId() {
+    public function getGoogleServicesAnalyticsTrackingId()
+    {
         $clientAPI = $this->getGoogleServicesAnalytics();
-        if($this->hasConfigInConfigs('tracking_id', $clientAPI)) {
+        if ($this->hasConfigInConfigs('tracking_id', $clientAPI)) {
             return $this->getConfigInConfigs('tracking_id', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleServicesAnalyticsTrackerName() {
+    public function getGoogleServicesAnalyticsTrackerName()
+    {
         $clientAPI = $this->getGoogleServicesAnalytics();
-        if($this->hasConfigInConfigs('tracker_name', $clientAPI)) {
+        if ($this->hasConfigInConfigs('tracker_name', $clientAPI)) {
             return $this->getConfigInConfigs('tracker_name', $clientAPI);
         } else {
             return;
@@ -162,27 +168,30 @@ class ConfigManager
     #  google_services.tag_manager
     ###
 
-    public function getGoogleServicesTagManager() {
+    public function getGoogleServicesTagManager()
+    {
         $clientAPI = $this->getGoogleServices();
-        if($this->hasConfigInConfigs('tag_manager', $clientAPI)) {
+        if ($this->hasConfigInConfigs('tag_manager', $clientAPI)) {
             return $this->getConfigInConfigs('tag_manager', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleServicesTagManagerEnabled() {
+    public function getGoogleServicesTagManagerEnabled()
+    {
         $clientAPI = $this->getGoogleServicesTagManager();
-        if($this->hasConfigInConfigs('enabled', $clientAPI)) {
+        if ($this->hasConfigInConfigs('enabled', $clientAPI)) {
             return $this->getConfigInConfigs('enabled', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleServicesTagManagerGTMId() {
+    public function getGoogleServicesTagManagerGTMId()
+    {
         $clientAPI = $this->getGoogleServicesTagManager();
-        if($this->hasConfigInConfigs('gtm_id', $clientAPI)) {
+        if ($this->hasConfigInConfigs('gtm_id', $clientAPI)) {
             return $this->getConfigInConfigs('gtm_id', $clientAPI);
         } else {
             return;
@@ -193,72 +202,80 @@ class ConfigManager
     ###
     #  client_api.service
     ###
-    public function getGoogleClientServiceAPI() {
+    public function getGoogleClientServiceAPI()
+    {
         $clientAPI = $this->getGoogleClientAPI();
-        if($this->hasConfigInConfigs('service', $clientAPI)) {
+        if ($this->hasConfigInConfigs('service', $clientAPI)) {
             return $this->getConfigInConfigs('service', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPIAppName() {
+    public function getGoogleClientServiceAPIAppName()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('app_name', $clientAPI)) {
+        if ($this->hasConfigInConfigs('app_name', $clientAPI)) {
             return $this->getConfigInConfigs('app_name', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPIClientId() {
+    public function getGoogleClientServiceAPIClientId()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('client_id', $clientAPI)) {
+        if ($this->hasConfigInConfigs('client_id', $clientAPI)) {
             return $this->getConfigInConfigs('client_id', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPIClientEmail() {
+    public function getGoogleClientServiceAPIClientEmail()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('client_email', $clientAPI)) {
+        if ($this->hasConfigInConfigs('client_email', $clientAPI)) {
             return $this->getConfigInConfigs('client_email', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPICertificateFingerprint() {
+    public function getGoogleClientServiceAPICertificateFingerprint()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('certificate_fingerprint', $clientAPI)) {
+        if ($this->hasConfigInConfigs('certificate_fingerprint', $clientAPI)) {
             return $this->getConfigInConfigs('certificate_fingerprint', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPICertificateP12() {
+    public function getGoogleClientServiceAPICertificateP12()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('certificate_p12', $clientAPI)) {
+        if ($this->hasConfigInConfigs('certificate_p12', $clientAPI)) {
             return $this->getConfigInConfigs('certificate_p12', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPICertificateKey() {
+    public function getGoogleClientServiceAPICertificateKey()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('certificate_key', $clientAPI)) {
+        if ($this->hasConfigInConfigs('certificate_key', $clientAPI)) {
             return $this->getConfigInConfigs('certificate_key', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientServiceAPICertificatePassword() {
+    public function getGoogleClientServiceAPICertificatePassword()
+    {
         $clientAPI = $this->getGoogleClientServiceAPI();
-        if($this->hasConfigInConfigs('certificate_password', $clientAPI)) {
+        if ($this->hasConfigInConfigs('certificate_password', $clientAPI)) {
             return $this->getConfigInConfigs('certificate_password', $clientAPI);
         } else {
             return;
@@ -268,27 +285,30 @@ class ConfigManager
     ###
     #  client_api.web_app
     ###
-    public function getGoogleClientWebAppAPI() {
+    public function getGoogleClientWebAppAPI()
+    {
         $clientAPI = $this->getGoogleClientAPI();
-        if($this->hasConfigInConfigs('web_app', $clientAPI)) {
+        if ($this->hasConfigInConfigs('web_app', $clientAPI)) {
             return $this->getConfigInConfigs('web_app', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientWebAppAPIClientId() {
+    public function getGoogleClientWebAppAPIClientId()
+    {
         $clientAPI = $this->getGoogleClientWebAppAPI();
-        if($this->hasConfigInConfigs('client_id', $clientAPI)) {
+        if ($this->hasConfigInConfigs('client_id', $clientAPI)) {
             return $this->getConfigInConfigs('client_id', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientWebAppAPIClientSecret() {
+    public function getGoogleClientWebAppAPIClientSecret()
+    {
         $clientAPI = $this->getGoogleClientWebAppAPI();
-        if($this->hasConfigInConfigs('client_secret', $clientAPI)) {
+        if ($this->hasConfigInConfigs('client_secret', $clientAPI)) {
             return $this->getConfigInConfigs('client_secret', $clientAPI);
         } else {
             return;
@@ -298,36 +318,40 @@ class ConfigManager
     ###
     #  client_api.public
     ###
-    public function getGoogleClientPublicAPI() {
+    public function getGoogleClientPublicAPI()
+    {
         $clientAPI = $this->getGoogleClientAPI();
-        if($this->hasConfigInConfigs('public', $clientAPI)) {
+        if ($this->hasConfigInConfigs('public', $clientAPI)) {
             return $this->getConfigInConfigs('public', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientPublicAPIAppName() {
+    public function getGoogleClientPublicAPIAppName()
+    {
         $clientAPI = $this->getGoogleClientPublicAPI();
-        if($this->hasConfigInConfigs('app_name', $clientAPI)) {
+        if ($this->hasConfigInConfigs('app_name', $clientAPI)) {
             return $this->getConfigInConfigs('app_name', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientPublicAPIKey() {
+    public function getGoogleClientPublicAPIKey()
+    {
         $clientAPI = $this->getGoogleClientPublicAPI();
-        if($this->hasConfigInConfigs('api_key', $clientAPI)) {
+        if ($this->hasConfigInConfigs('api_key', $clientAPI)) {
             return $this->getConfigInConfigs('api_key', $clientAPI);
         } else {
             return;
         }
     }
 
-    public function getGoogleClientPublicAPISiteName() {
+    public function getGoogleClientPublicAPISiteName()
+    {
         $clientAPI = $this->getGoogleClientPublicAPI();
-        if($this->hasConfigInConfigs('site_name', $clientAPI)) {
+        if ($this->hasConfigInConfigs('site_name', $clientAPI)) {
             return $this->getConfigInConfigs('site_name', $clientAPI);
         } else {
             return;
